@@ -5,4 +5,5 @@ project(slab)
 add_executable(
     ${PROJECT_NAME}
     main.c
+    src/slab.c
 )
