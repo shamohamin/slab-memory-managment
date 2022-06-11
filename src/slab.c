@@ -23,9 +23,11 @@ Slab *build_slab(unsigned int num_of_pages)
     temp_slab->used_space = 0;
     temp_slab->pages_count = temp_num_of_pages;
     temp_slab->pages = (PageStatus *)malloc(sizeof(PageStatus) * temp_num_of_pages);
-
     if (!temp_slab->pages)
         ERROR_HANDLER_AND_DIE("memory allocation for pages was not successful.")
+
+    for(int i = 0; i < temp_num_of_pages; i++)
+        (temp_slab->pages)[i] = FREE;
 
     return temp_slab;
 }
@@ -56,8 +58,8 @@ Cache **build_caches(
         temp_cache->cacheName = names[i];
         temp_cache->size = temp_num_of_slabs * MAX_SLAB_SIZE; // calculate the size from slabs
         temp_cache->slabs = (Slab **)malloc(sizeof(Slab *) * temp_num_of_slabs);
-        
-        if(temp_cache->slabs == NULL)
+
+        if (temp_cache->slabs == NULL)
             ERROR_HANDLER_AND_DIE("memory allocation for slabs wasnot successful.");
 
         for (int j = 0; j < temp_num_of_slabs; j++)
@@ -65,8 +67,25 @@ Cache **build_caches(
 
         temp_cache->slabs_count = temp_num_of_slabs;
 
+        if (pthread_mutex_init(&temp_cache->cache_lock, NULL) != 0)
+            ERROR_HANDLER_AND_DIE("lock init incomplete.");
+
         caches[i] = temp_cache;
     }
 
     return caches;
+}
+
+void print_cache_summary(Cache **caches)
+{
+    for (int i = 0; i < CACHE_DEFAULT_SIZE; i++)
+    {
+        if (caches[i] == NULL)
+            ERROR_HANDLER_AND_DIE(sprintf("cache {%d} has been not allocated", i));
+
+        printf("NAME OF CACHE %d\n", caches[i]->cacheName);
+        printf("SIZE OF CACHE %d\n", caches[i]->size);
+        printf("SLABS OF CACHE %d\n", caches[i]->slabs_count);
+        printf("*************°°***********°°*******°°*****\n");
+    }
 }
