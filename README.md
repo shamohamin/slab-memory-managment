@@ -1,5 +1,5 @@
 # slab-memory-managment
-This repo is a simple implementation of (Slab memory managment)[https://en.wikipedia.org/wiki/Slab_allocation]. Slab memory managment is a kernel space Memory management to handle Memory requests of Operating Systems' objects. 
+This repo is a simple implementation of [Slab memory managment](https://en.wikipedia.org/wiki/Slab_allocation). Slab memory managment is a kernel space Memory management to handle Memory requests of Operating Systems' objects. 
 Operating Systems' objects are locks, semaphor, files, processes' information and etc. 
 
 ## Run
